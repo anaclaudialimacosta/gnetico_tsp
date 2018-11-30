@@ -20,7 +20,7 @@ public class Genetico_tsp {
     
    
     
-    public static Individuo selecao(ArrayList<Individuo> populacaoDeSolucoes, Grafo g){
+    public static Individuo melhorEncontrado(ArrayList<Individuo> populacaoDeSolucoes, Grafo g){
        
         Individuo melhorEncontrada = new Individuo();
         
@@ -122,7 +122,7 @@ public class Genetico_tsp {
         return ListaDeVertices;
     }
     
-    public static void calculaFitness(Grafo g, ArrayList<Individuo> populacao, Integer[] custos){
+    public static void calculaFitness(Grafo g, ArrayList<Individuo> populacao){
         
         for(Individuo s : populacao){
             s.calculaCusto(g);
@@ -130,7 +130,27 @@ public class Genetico_tsp {
         }
         
     }
-    
+    public static void selecaoDosIndividuos(ArrayList<Individuo> populacao, Grafo g){
+        int k;
+        ArrayList<Individuo> populacaoAuxiliar = new ArrayList<>();
+        for(Individuo s: populacao) populacaoAuxiliar.add(s);
+               
+        if(populacao.size()>4){
+            k = (int) Math.random()*(4)+ 1; 
+        } else {
+            k = (int) Math.random()*(populacao.size())+ 1; 
+        }
+        
+        Individuo[] selecionados = new Individuo[k];
+        for(int i=0;i<k;i++){
+            
+            selecionados[i] = melhorEncontrado(populacaoAuxiliar,g);
+            populacaoAuxiliar.remove(selecionados[i]);
+        }
+            
+        
+        
+    }
     
 
     public static void main(String[] args) throws FileNotFoundException, IOException {
@@ -167,15 +187,15 @@ public class Genetico_tsp {
             matrizDeAdjacencia[(a.getDestino().getId())][(a.getOrigem().getId())] = 1;
         }//Marcando as posições em que os vertices são adjacentes 
 
-        for (i = 1; i <= quantVertices; i++) {
+        /*for (i = 1; i <= quantVertices; i++) {
             for (j = 1; j <= quantVertices; j++) {  //A linha 0 e Coluna 0 devem ser descartadas
                 System.out.print(matrizDeAdjacencia[i][j]);
             }
             System.out.print("\n");
         }
-        //Exibindo Matriz Gerada 
+        //Exibindo Matriz Gerada */
 
-        System.out.println("Digite o tamanho da população inicial: ");
+        System.out.println("Digite o tamanho da população: ");
         int tam = scanner.nextInt();
 
         popInicial = construirPopulacaoInicial(tam, matrizDeAdjacencia, quantVertices, G);
@@ -188,6 +208,6 @@ public class Genetico_tsp {
        
        
 
-    }//Visializando matriz de adjacência construída
+    }
 
 }
