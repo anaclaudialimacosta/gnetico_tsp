@@ -20,13 +20,13 @@ public class Genetico_tsp {
     
    
     
-    public static Solucao selecao(ArrayList<Solucao> populacaoDeSolucoes, Grafo g){
+    public static Individuo selecao(ArrayList<Individuo> populacaoDeSolucoes, Grafo g){
        
-        Solucao melhorEncontrada = new Solucao();
+        Individuo melhorEncontrada = new Individuo();
         
         melhorEncontrada.setCusto(Integer.MAX_VALUE); //Setando em Infinito. 
         
-        for(Solucao s: populacaoDeSolucoes){
+        for(Individuo s: populacaoDeSolucoes){
             s.calculaCusto(g);
             if(s.getCusto()< melhorEncontrada.getCusto()){
                 melhorEncontrada.setPercurso(s.getPercurso());
@@ -37,8 +37,8 @@ public class Genetico_tsp {
         
     } //Essa função tem como objetivo salvar a melhor solução encontrada em uma população de soluções
     
-    public static Solucao geradorSolucaoaleatoria(Vertice inicial, Grafo G, int numVertices) {
-        Solucao s = new Solucao();
+    public static Individuo geradorSolucaoaleatoria(Vertice inicial, Grafo G, int numVertices) {
+        Individuo s = new Individuo();
         ArrayList<Vertice> percurso = new ArrayList<>();
         Integer[] jaAconteceu = new Integer[numVertices + 1];
         //System.out.println("Chamei função de Gerador Aleatório");
@@ -62,9 +62,9 @@ public class Genetico_tsp {
 
     } //Essa função gera um caminho aleatório com vértices diferentes, mas que necessitam de validação pois não se sabe se os vértices escolhidos são adjacentes
 
-    public static ArrayList<Solucao> construirPopulacaoInicial(float tam, Integer[][] matrizDeAdjacencia, int numVertices, Grafo g) { //O parâmetro tamanho corresponde ao tamanho da população inicial desejada
+    public static ArrayList<Individuo> construirPopulacaoInicial(float tam, Integer[][] matrizDeAdjacencia, int numVertices, Grafo g) { //O parâmetro tamanho corresponde ao tamanho da população inicial desejada
 
-        ArrayList<Solucao> popInicial = new ArrayList<>();
+        ArrayList<Individuo> popInicial = new ArrayList<>();
         int ini = (int) Math.floor(Math.random() * numVertices); //Seleciona um Vertice Aleatório
         //System.out.println("Entrei em Construir Pop Ini");
         Vertice v = new Vertice(ini);
@@ -72,7 +72,7 @@ public class Genetico_tsp {
         int contSolucoesValidas = 0;
         while (contSolucoesValidas < tam) {
 
-                Solucao s1 = geradorSolucaoaleatoria(v, g, numVertices);
+                Individuo s1 = geradorSolucaoaleatoria(v, g, numVertices);
                 s1.validar(matrizDeAdjacencia, g.vertices);
                 if(s1.validacao){
                     popInicial.add(s1);
@@ -121,16 +121,27 @@ public class Genetico_tsp {
         }
         return ListaDeVertices;
     }
+    
+    public static void calculaFitness(Grafo g, ArrayList<Individuo> populacao, Integer[] custos){
+        
+        for(Individuo s : populacao){
+            s.calculaCusto(g);
+            s.feat = 1/s.getCusto();
+        }
+        
+    }
+    
+    
 
     public static void main(String[] args) throws FileNotFoundException, IOException {
 
         String[][] buffer = new String[100][3];
         ArrayList<Aresta> listaDeArestas = new ArrayList<>();
         ArrayList<Vertice> listaDeVertices = new ArrayList();
-        ArrayList<Solucao> popInicial = new ArrayList<>();
+        ArrayList<Individuo> popInicial = new ArrayList<>();
         Scanner scanner = new Scanner(System.in);
         Grafo G = new Grafo();
-
+        
         //Leitura do Arquivo de Entrada de Representação do Grafo
         buffer = lerGrafo();
         int quantVertices = Integer.parseInt(buffer[0][0]);

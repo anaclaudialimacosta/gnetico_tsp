@@ -11,18 +11,19 @@ import java.util.ArrayList;
  *
  * @author alima
  */
-public class Solucao {
+public class Individuo {
     
     
     private int custo;
     private ArrayList<Vertice> percurso;
     public boolean validacao;
-    public Double[] feat;
-
-    public Solucao() {
-        this.percurso= new ArrayList<Vertice>();
+    public float feat; //Era pra ser fitness, mas eu escrevi assim incialmente e agora to com preguiça de trocar
+    
+    public Individuo() {
+        this.percurso= new ArrayList<>();
         this.validacao = false;
-        this.feat = new Double[200]; //Esse ponto do código o limita a uma entrada com no máximo 200 vértices
+        this.feat = 0; //Esse ponto do código o limita a uma entrada com no máximo 200 vértices
+        
     }
 
     public int getCusto() {
