@@ -18,7 +18,6 @@ public class Solucao {
     public boolean validacao;
 
     public Solucao() {
-        this.custo = 0;
         this.percurso= new ArrayList<Vertice>();
         this.validacao = false;
     }

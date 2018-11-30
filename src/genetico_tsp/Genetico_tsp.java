@@ -17,49 +17,24 @@ import java.util.Scanner;
  * @author alima
  */
 public class Genetico_tsp {
-
-    /*public static Solucao bfs(Vertice inicial, Integer[][] matrizDeAdjacencia, Grafo G){ // Essa função realiza a busca em profundidade no grafo
-        Solucao s = new Solucao();
-        ArrayList<Vertice> aux = G.vertices;
-        ArrayList<Vertice> queue = new ArrayList();
-        ArrayList<Vertice> percurso = new ArrayList();
+    
+    
+    public static Solucao salvandoMelhorSolucao(ArrayList<Solucao> populacaoDeSolucoes, Grafo g){
+       
+        Solucao melhorEncontrada = new Solucao();
+        melhorEncontrada.setCusto(Integer.MAX_VALUE); //Setando em Infinito. 
         
-        aux.remove(inicial); 
-        
-        for(Vertice u: G.vertices){
-            u.cor = "branco";
-            u.d = Integer.MAX_VALUE;
-            u.prox = null;
-            
-        }
-        
-        inicial.cor = "cinza";
-        inicial.d = 0;
-        inicial.prox= null;
-        
-        queue.add(inicial);
-        percurso.add(inicial);
-        
-        while(!queue.isEmpty()){
-            Vertice u = queue.get(0);
-            for(int i=0;i<G.vertices.size();i++){
-                if(matrizDeAdjacencia[u.getId()-1][i-1]==1){
-                    if("branco".equals(G.vertices.get(i).cor) ){
-                        G.vertices.get(i).cor= "cinza";
-                        G.vertices.get(i).d= u.d+1;
-                        G.vertices.get(i).prox = u.getId();
-                        queue.add(G.vertices.get(i));
-                    }
-                }
-            
+        for(Solucao s: populacaoDeSolucoes){
+            s.calculaCusto(g);
+            if(s.getCusto()< melhorEncontrada.getCusto()){
+                melhorEncontrada.setPercurso(s.getPercurso());
+                melhorEncontrada.setCusto(s.getCusto());
             }
-            percurso.add(u);
-            u.cor="preto";
-        }  
-        s.setPercurso(percurso);
+        }
+        return melhorEncontrada;
         
-        return s;
-    }*/
+    } //Essa função tem como objetivo salvar a melhor solução encontrada em uma população de soluções
+    
     public static Solucao geradorSolucaoaleatoria(Vertice inicial, Grafo G, int numVertices) {
         Solucao s = new Solucao();
         ArrayList<Vertice> percurso = new ArrayList<>();
