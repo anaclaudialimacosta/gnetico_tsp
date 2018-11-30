@@ -26,14 +26,22 @@ public class Solucao {
     public int getCusto() {
         return custo;
     }
-    public int getCusto(ArrayList<Aresta> listaDeArestas, Integer[][] matrizDeAdjacencia, int numDeArestas) {
+    public int calculaCusto(Grafo g) {
         int cust =0;
         
-        for(Vertice v: this.getPercurso()){
-            
-        }
-        
-        return cust;
+       for(int i=0; i<this.percurso.size()-1;i++){
+           Vertice u = this.percurso.get(i);
+           Vertice v = this.percurso.get(i+1);
+           for(Aresta a: g.arestas){
+               if(((a.getOrigem().equals(u))&&(a.getDestino().equals(v)))||((a.getOrigem().equals(v))&&(a.getDestino().equals(u)))){
+                   cust+=a.getCusto();
+                   break;
+               }
+           }
+       }
+       
+       this.custo = cust;
+       return cust;
     }
 
     public void setCusto(int custo) {
