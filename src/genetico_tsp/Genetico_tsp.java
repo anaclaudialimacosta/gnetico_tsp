@@ -18,10 +18,12 @@ import java.util.Scanner;
  */
 public class Genetico_tsp {
     
+   
     
-    public static Solucao salvandoMelhorSolucao(ArrayList<Solucao> populacaoDeSolucoes, Grafo g){
+    public static Solucao selecao(ArrayList<Solucao> populacaoDeSolucoes, Grafo g){
        
         Solucao melhorEncontrada = new Solucao();
+        
         melhorEncontrada.setCusto(Integer.MAX_VALUE); //Setando em Infinito. 
         
         for(Solucao s: populacaoDeSolucoes){

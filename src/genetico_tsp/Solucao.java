@@ -13,13 +13,16 @@ import java.util.ArrayList;
  */
 public class Solucao {
     
+    
     private int custo;
     private ArrayList<Vertice> percurso;
     public boolean validacao;
+    public Double[] feat;
 
     public Solucao() {
         this.percurso= new ArrayList<Vertice>();
         this.validacao = false;
+        this.feat = new Double[200]; //Esse ponto do código o limita a uma entrada com no máximo 200 vértices
     }
 
     public int getCusto() {
@@ -38,6 +41,8 @@ public class Solucao {
                }
            }
        }
+       
+       //AQUI AINDA FALTA SOMAR O CUSTO DA ÚLTIMA ARESTA PARA VOLTAR PARA A PRIMEIRA
        
        this.custo = cust;
        return cust;
