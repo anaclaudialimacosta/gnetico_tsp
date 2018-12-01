@@ -186,7 +186,32 @@ public class Genetico_tsp {
         return popGerada;
         
     }//Cruzamento através de recombinação uniforme
-    
+    public static Individuo mutacao(Individuo ind){
+        Individuo novoi = new Individuo();
+        Integer[] arrayAux= new Integer[ind.getPercurso().size()];
+        ArrayList<Vertice> percurso = new ArrayList<>();
+        for(int i=0;i<ind.getPercurso().size();i++){
+                arrayAux[i]=ind.getPercurso().get(i).getId();
+            } // auxilia na troca, o arraylist não é fácil de fazer a troca de posições
+        
+        while(! novoi.validacao){
+            int pos1,pos2;
+            pos1 = (int) Math.random() * (ind.getPercurso().size() + 1);
+            pos2 = (int) Math.random() * (ind.getPercurso().size() + 1);
+            
+            int aux = arrayAux[pos1];
+            arrayAux[pos1] = arrayAux[pos2];
+            arrayAux[pos2] = aux;
+            
+            for(int i=0;i<ind.getPercurso().size();i++){
+                percurso.add(new Vertice(arrayAux[i]));
+            } //criando percurso para novo individuo
+            
+           novoi.setPercurso(percurso);
+        }
+        return novoi;
+        
+    }//Essa função retorna um individuo que sofreu mutação, mas não valida se o novo individuo ainda possui um percurso válido, isso deve ser feito no main
 
     public static void main(String[] args) throws FileNotFoundException, IOException {
 
