@@ -147,7 +147,7 @@ public class Genetico_tsp {
     }
     
     public static ArrayList<Individuo> crossover(ArrayList<Individuo> pop, Individuo[] selecionados, Grafo g, Integer[][] matrizDeAdjacencia){
-        System.out.println("Entrei no CrossOver");
+        //System.out.println("Entrei no CrossOver");
         int quantVertices = g.vertices.size();
         Individuo pai1 = selecionados[0];
         Individuo pai2 = selecionados[1];
@@ -161,12 +161,12 @@ public class Genetico_tsp {
         for(int i=0;i<quantVertices;i++){
             double prob = Math.random();
             mascara[i] = (prob>=0.5)? 1 : 0;  //operador ternário mais adequado nessa situação
-            System.out.println("Criei a máscara");
+            //System.out.println("Criei a máscara");
         } //Gerando a mascara
         
         popGerada.add(selecionados[0]);//Melhor solução permanece na solução gerada
         while(pop.size()> contadorSolucoesValidas){
-            System.out.println("SOS ENTREEEEEEEI");
+            //System.out.println("SOS ENTREEEEEEEI");
             for(int i=0;i<quantVertices;i++){
                 if(mascara[i] ==1) {
                     percursoGerado.add(pai1.getPercurso().get(i).getId(),pai1.getPercurso().get(i) );
@@ -177,14 +177,14 @@ public class Genetico_tsp {
                 s1.setPercurso(percursoGerado);
                 s1.validar(matrizDeAdjacencia, percursoGerado);
                 if(s1.validacao){
-                    System.out.println("A solução gerada é vááááááálida");
+                    //System.out.println("A solução gerada é vááááááálida");
                     popGerada.add(s1);
                     contadorSolucoesValidas++;
                 }
             
             
         }
-        System.out.println("reotrnei no crossover");
+        //System.out.println("reotrnei no crossover");
         return popGerada;
         
     }//Cruzamento através de recombinação uniforme
@@ -234,6 +234,8 @@ public class Genetico_tsp {
         listaDeVertices = instanciandoListaDeVertices(buffer);
         G.arestas = listaDeArestas;
         G.vertices = listaDeVertices;
+        
+       // for(Aresta a: G.arestas) System.out.println("Info da Aresta: " + a.getOrigem().getId() +  "  " + a.getDestino().getId()+ "  "  + a.getCusto());
 
         //Criar Matriz de Adjacencia para grafos não orientados
         Integer[][] matrizDeAdjacencia = new Integer[quantVertices + 1][quantVertices + 1];
@@ -243,13 +245,14 @@ public class Genetico_tsp {
             for (j = 0; j <= quantVertices; j++) {
                 matrizDeAdjacencia[i][j] = 0;
             }
-        }//Inicializando As Posições Da Matriz
+       }//Inicializando As Posições Da Matriz
 
-        for (Aresta a : listaDeArestas) {
+        for (Aresta a : G.arestas) {
             matrizDeAdjacencia[(a.getOrigem().getId())][(a.getDestino().getId())] = 1;
             matrizDeAdjacencia[(a.getDestino().getId())][(a.getOrigem().getId())] = 1;
             
         }//Marcando as posições em que os vertices são adjacentes 
+        //GRAFO NÃO ORIENTADO POIS MARCA TANTO DA ORIGEM PRO DESTINO QUANTO DO DESTINO PARA ORIGEM
 
         /*for (i = 1; i <= quantVertices; i++) {
             for (j = 1; j <= quantVertices; j++) {  //A linha 0 e Coluna 0 devem ser descartadas
@@ -279,7 +282,7 @@ public class Genetico_tsp {
         //Genetic
         for(i=0;i<numIteracoes;i++){
             
-            System.out.println(i+"iteração");
+           System.out.println(i+"iteração");
             selecionados = selecaoDosIndividuos(pop , G); //Avalia e Seleciona os Individuos
             popGerada = crossover(pop, selecionados, G, matrizDeAdjacencia);
             probMutacao = Math.random();
@@ -290,8 +293,9 @@ public class Genetico_tsp {
                 novo = mutacao(popGerada.get(indMutada));
                 novo.validar(matrizDeAdjacencia, listaDeVertices);
                 if(novo.validacao){
-                    popGerada.add(novo);
-                    popGerada.remove(indMutada);
+                    System.out.println("Ocorreu Mutação");
+                  popGerada.add(novo);
+                  popGerada.remove(indMutada);
                 }//A nova solução só será realmente alterada se for válida           
             }
             
@@ -305,9 +309,10 @@ public class Genetico_tsp {
           System.out.print(sx.getPercurso().get(i).getId());
           
       }
+      for(Aresta a: G.arestas) System.out.println("Info da Aresta: " + a.getOrigem().getId() +  "  " + a.getDestino().getId()+ "  "  + a.getCusto());
       sx.calculaCusto(G);
       System.out.println("Custo: "+ sx.getCusto());
-        
+      
         
        
 

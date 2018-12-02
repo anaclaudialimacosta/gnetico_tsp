@@ -36,8 +36,11 @@ public class Individuo {
            Vertice u = this.percurso.get(i);
            Vertice v = this.percurso.get(i+1);
            for(Aresta a: g.arestas){
-               if(((a.getOrigem().equals(u))&&(a.getDestino().equals(v)))||((a.getOrigem().equals(v))&&(a.getDestino().equals(u)))){
-                   cust+=a.getCusto();
+               Vertice v1 = a.getOrigem();
+               Vertice v2 = a.getDestino();
+               if(((v1.getId()==u.getId())&&(v2.getId()==v.getId())) || ((v1.getId()==v.getId())&&(v2.getId()==u.getId())) ){
+                   cust = cust + a.getCusto();
+                   System.out.println("entrei aaaaaaqui");//não está entrando aqui
                    break;
                }
            }
