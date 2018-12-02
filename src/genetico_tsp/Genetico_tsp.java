@@ -105,10 +105,12 @@ public class Genetico_tsp {
     public static ArrayList instanciandoListaDeArestas(String[][] buffer) {
         ArrayList<Aresta> ListaDeArestas = new ArrayList<>();
         int quantArestas = Integer.parseInt(buffer[0][1]);
+        int custo;
         for (int i = 1; i <= quantArestas; i++) {
             Vertice origem = new Vertice(Integer.parseInt(buffer[i][0]));
             Vertice destino = new Vertice(Integer.parseInt(buffer[i][1]));
-            Aresta a = new Aresta(origem, destino, Integer.parseInt(buffer[i][2]));
+            custo = Integer.parseInt(buffer[i][2]);
+            Aresta a = new Aresta(origem, destino, custo);
             ListaDeArestas.add(a);
         }
         return ListaDeArestas;
@@ -123,14 +125,6 @@ public class Genetico_tsp {
         return ListaDeVertices;
     }
     
-   /* public static void calculaFitness(Grafo g, ArrayList<Individuo> populacao){
-        
-        for(Individuo s : populacao){
-            s.calculaCusto(g);
-            s.feat = 1/s.getCusto();
-        }
-        
-    }*/
     public static Individuo[] selecaoDosIndividuos(ArrayList<Individuo> populacao, Grafo g){
        
         ArrayList<Individuo> populacaoAuxiliar = new ArrayList<>();
@@ -153,6 +147,7 @@ public class Genetico_tsp {
     }
     
     public static ArrayList<Individuo> crossover(ArrayList<Individuo> pop, Individuo[] selecionados, Grafo g, Integer[][] matrizDeAdjacencia){
+        System.out.println("Entrei no CrossOver");
         int quantVertices = g.vertices.size();
         Individuo pai1 = selecionados[0];
         Individuo pai2 = selecionados[1];
@@ -160,29 +155,36 @@ public class Genetico_tsp {
         ArrayList<Individuo> popGerada = new ArrayList<>();
         ArrayList<Vertice> percursoGerado = new ArrayList<>();
         Individuo s1 = new Individuo();
-        int contadorSolucoesValidas =0 ;
+        int contadorSolucoesValidas =1;
+        
+        
         for(int i=0;i<quantVertices;i++){
             double prob = Math.random();
             mascara[i] = (prob>=0.5)? 1 : 0;  //operador ternário mais adequado nessa situação
+            System.out.println("Criei a máscara");
         } //Gerando a mascara
         
+        popGerada.add(selecionados[0]);//Melhor solução permanece na solução gerada
         while(pop.size()> contadorSolucoesValidas){
+            System.out.println("SOS ENTREEEEEEEI");
             for(int i=0;i<quantVertices;i++){
                 if(mascara[i] ==1) {
                     percursoGerado.add(pai1.getPercurso().get(i).getId(),pai1.getPercurso().get(i) );
                 }else{
                     percursoGerado.add(pai2.getPercurso().get(i).getId(),pai2.getPercurso().get(i) );
                 }
+            }
                 s1.setPercurso(percursoGerado);
                 s1.validar(matrizDeAdjacencia, percursoGerado);
                 if(s1.validacao){
+                    System.out.println("A solução gerada é vááááááálida");
                     popGerada.add(s1);
                     contadorSolucoesValidas++;
                 }
             
-            }
+            
         }
-        
+        System.out.println("reotrnei no crossover");
         return popGerada;
         
     }//Cruzamento através de recombinação uniforme
@@ -219,9 +221,10 @@ public class Genetico_tsp {
         ArrayList<Aresta> listaDeArestas = new ArrayList<>();
         ArrayList<Vertice> listaDeVertices = new ArrayList();
         ArrayList<Individuo> pop = new ArrayList<>();
+        ArrayList<Individuo> popGerada = new ArrayList<>();
         Scanner scanner = new Scanner(System.in);
         Grafo G = new Grafo();
-        
+        double probMutacao;
         //Leitura do Arquivo de Entrada de Representação do Grafo
         buffer = lerGrafo();
         int quantVertices = Integer.parseInt(buffer[0][0]);
@@ -259,7 +262,7 @@ public class Genetico_tsp {
         
         System.out.println("Digite o tamanho da população: ");
         int tam = scanner.nextInt();
-
+        
         pop = construirPopulacaoInicial(tam, matrizDeAdjacencia, quantVertices, G);
         Individuo[] selecionados = new Individuo[k]; 
         
@@ -270,12 +273,41 @@ public class Genetico_tsp {
         //System.out.println("Solução Inicial Gerada Com Sucesso");
         System.out.println("Digite o número de iterações desejadas: ");
         int numIteracoes = scanner.nextInt();
+        System.out.println("Digite a porcentagem da taxa de mutação");
+        int  taxaMutacao = scanner.nextInt();
         
         //Genetic
         for(i=0;i<numIteracoes;i++){
-            selecionados = selecaoDosIndividuos(pop , G); //Selecao
             
+            System.out.println(i+"iteração");
+            selecionados = selecaoDosIndividuos(pop , G); //Avalia e Seleciona os Individuos
+            popGerada = crossover(pop, selecionados, G, matrizDeAdjacencia);
+            probMutacao = Math.random();
+            
+            if(probMutacao<(taxaMutacao/100)){ //probabilidade de 20% de ter uma mutação
+                Individuo novo = new Individuo();
+                int indMutada = (int) Math.random()* popGerada.size()+1;
+                novo = mutacao(popGerada.get(indMutada));
+                novo.validar(matrizDeAdjacencia, listaDeVertices);
+                if(novo.validacao){
+                    popGerada.add(novo);
+                    popGerada.remove(indMutada);
+                }//A nova solução só será realmente alterada se for válida           
+            }
+            
+          pop = popGerada; 
         }
+        
+      Individuo sx = melhorEncontrado(pop,G); 
+      
+      System.out.println("-------------MELHOR SOLUÇÃO-----------------------\n");
+      for(i=0;i<sx.getPercurso().size();i++){
+          System.out.print(sx.getPercurso().get(i).getId());
+          
+      }
+      sx.calculaCusto(G);
+      System.out.println("Custo: "+ sx.getCusto());
+        
         
        
 
