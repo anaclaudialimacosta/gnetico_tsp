@@ -42,14 +42,13 @@ public class Genetico_tsp {
         Individuo s = new Individuo();
         ArrayList<Vertice> percurso = new ArrayList<>();
         Integer[] jaAconteceu = new Integer[numVertices + 1];
-        //System.out.println("Chamei função de Gerador Aleatório");
         for(int i=0;i<numVertices+1;i++){
             jaAconteceu[i] = 0; 
         }  //Inicialização
         percurso.add(inicial);
         
         while (percurso.size() < numVertices) {
-            System.out.println("Entrei no While do Gerador Aleatório");
+            //System.out.println("Entrei no While do Gerador Aleatório");
             int indice = (int) (Math.random()* numVertices)+ 1;
             //System.out.println("Indice Gerado: " +indice );
             if(jaAconteceu[indice]==0 && indice != 0){
@@ -71,15 +70,14 @@ public class Genetico_tsp {
         int contSolucoesValidas = 0;
         while (contSolucoesValidas < tam) {
                 int ini = (int) Math.random() * numVertices +1; //Seleciona um Vertice Aleatório
-                System.out.println("Entrei em Construir Pop Ini");
+                
                 Vertice v = g.vertices.get(ini);
                 Individuo s1 = geradorSolucaoaleatoria(v, g, numVertices);
                 s1.validar(matrizDeAdjacencia, g.vertices);
                 if(s1.validacao){
+                    s1.calculaCusto(g);
                     popInicial.add(s1);
                     contSolucoesValidas++;
-                    
-                    System.out.println("SOLUÇÃO VÁLIDA ENCONTRADAAAAAAAAAAAAAAAA");
                 }
                 
                
@@ -131,13 +129,7 @@ public class Genetico_tsp {
        
         ArrayList<Individuo> populacaoAuxiliar = new ArrayList<>();
         for(Individuo s: populacao) populacaoAuxiliar.add(s);
-               
-        /*if(populacao.size()>4){
-            k = (int) Math.random()*(4)+ 1; 
-        } else {
-            k = (int) Math.random()*(populacao.size())+ 1; 
-        }*/
-        
+
         Individuo[] selecionados = new Individuo[k];
         for(int i=0;i<k;i++){
             selecionados[i] = melhorEncontrado(populacaoAuxiliar,g);
@@ -159,18 +151,20 @@ public class Genetico_tsp {
         ArrayList<Vertice> percursoGerado = new ArrayList<>();
         
         Individuo s1 = new Individuo();
+        
+        popGerada.add(selecionados[0]);//Melhor solução permanece na solução gerada
         int contadorSolucoesValidas =1;
         
         
         for(int i=0;i<quantVertices;i++){
             double prob = Math.random();
             mascara[i] = (prob>=0.5)? 1 : 0;  //operador ternário mais adequado nessa situação
-            System.out.println("mascara["+i+ "]: "+ mascara[i]);
+            System.out.println("mascara[" +i+ "]: "+ mascara[i]);
         } //Gerando a mascara
         
-        popGerada.add(selecionados[0]);//Melhor solução permanece na solução gerada
+        
         while(pop.size()> contadorSolucoesValidas){
-            //System.out.println("SOS ENTREEEEEEEI");
+           
             for(int i=0;i<quantVertices;i++){
                 if(mascara[i] ==1) {
                     percGerado[i] = pai1.getPercurso().get(i).getId();
@@ -184,14 +178,14 @@ public class Genetico_tsp {
                 s1.calculaCusto(g);
                 s1.validar(matrizDeAdjacencia, percursoGerado);
                 if(s1.validacao){
-                    System.out.println("A solução gerada é vááááááálida");
+                    //System.out.println("A solução gerada é vááááááálida");
                     popGerada.add(s1);
                     contadorSolucoesValidas++;
                 }
             
             
         }
-        //System.out.println("reotrnei no crossover");
+        System.out.println("reotrnei no crossover");
         return popGerada;
         
     }//Cruzamento através de recombinação uniforme
@@ -322,8 +316,12 @@ public class Genetico_tsp {
           System.out.print(sx.getPercurso().get(i).getId());
           
       }
+      System.out.print(sx.getPercurso().get(0)); //Volta para o primeiro
+      
       //for(Aresta a: G.arestas) System.out.println("Info da Aresta: " + a.getOrigem().getId() +  "  " + a.getDestino().getId()+ "  "  + a.getCusto());
+      
       sx.calculaCusto(G);
+      
       System.out.println("Custo: "+ sx.getCusto());
       
         
