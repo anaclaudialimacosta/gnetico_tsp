@@ -46,15 +46,15 @@ public class Genetico_tsp {
         for(int i=0;i<numVertices+1;i++){
             jaAconteceu[i] = 0; 
         }  //Inicialização
-        int j=0;
+        percurso.add(inicial);
+        
         while (percurso.size() < numVertices) {
-            //System.out.println("Entrei no While do Gerador Aleatório");
+            System.out.println("Entrei no While do Gerador Aleatório");
             int indice = (int) (Math.random()* numVertices + 1);
             //System.out.println("Indice Gerado: " +indice );
             if(jaAconteceu[indice]==0 && indice != 0){
-                jaAconteceu[indice] =1;
-                Vertice v = new Vertice(indice);
-                //System.out.println("Vertice Encontrado");
+                jaAconteceu[indice]=1;
+                Vertice v = new Vertice(indice);               
                 percurso.add(v);
             } 
         }
@@ -66,18 +66,19 @@ public class Genetico_tsp {
     public static ArrayList<Individuo> construirPopulacaoInicial(float tam, Integer[][] matrizDeAdjacencia, int numVertices, Grafo g) { //O parâmetro tamanho corresponde ao tamanho da população inicial desejada
 
         ArrayList<Individuo> popInicial = new ArrayList<>();
-        int ini = (int) Math.floor(Math.random() * numVertices); //Seleciona um Vertice Aleatório
-        //System.out.println("Entrei em Construir Pop Ini");
-        Vertice v = new Vertice(ini);
-
+        
+        
         int contSolucoesValidas = 0;
         while (contSolucoesValidas < tam) {
-
+                int ini = (int) Math.floor(Math.random() * numVertices+1); //Seleciona um Vertice Aleatório
+                System.out.println("Entrei em Construir Pop Ini");
+                Vertice v = new Vertice(ini);
                 Individuo s1 = geradorSolucaoaleatoria(v, g, numVertices);
                 s1.validar(matrizDeAdjacencia, g.vertices);
                 if(s1.validacao){
                     popInicial.add(s1);
                     contSolucoesValidas++;
+                    
                    // System.out.println("SOLUÇÃO VÁLIDA ENCONTRADAAAAAAAAAAAAAAAA");
                 }
                 
@@ -121,6 +122,7 @@ public class Genetico_tsp {
         int quantV = Integer.parseInt(buffer[0][0]);
         for (int i = 1; i <= quantV; i++) {
             Vertice vm = new Vertice(i);
+            ListaDeVertices.add(vm);
         }
         return ListaDeVertices;
     }
@@ -218,18 +220,25 @@ public class Genetico_tsp {
     public static void main(String[] args) throws FileNotFoundException, IOException {
 
         String[][] buffer = new String[100][3];
+        Individuo[] selecionados = new Individuo[k]; 
+
+        
         ArrayList<Aresta> listaDeArestas = new ArrayList<>();
         ArrayList<Vertice> listaDeVertices = new ArrayList();
         ArrayList<Individuo> pop = new ArrayList<>();
         ArrayList<Individuo> popGerada = new ArrayList<>();
+        
         Scanner scanner = new Scanner(System.in);
+        
         Grafo G = new Grafo();
+        
         double probMutacao;
         //Leitura do Arquivo de Entrada de Representação do Grafo
+  
         buffer = lerGrafo();
         int quantVertices = Integer.parseInt(buffer[0][0]);
         int quantArestas = Integer.parseInt(buffer[0][1]);
-
+      
         listaDeArestas = instanciandoListaDeArestas(buffer);
         listaDeVertices = instanciandoListaDeVertices(buffer);
         G.arestas = listaDeArestas;
@@ -265,24 +274,21 @@ public class Genetico_tsp {
         
         System.out.println("Digite o tamanho da população: ");
         int tam = scanner.nextInt();
-        
-        pop = construirPopulacaoInicial(tam, matrizDeAdjacencia, quantVertices, G);
-        Individuo[] selecionados = new Individuo[k]; 
-        
-       /* if(popInicial.get(0).getPercurso().isEmpty()){
-            System.out.println("Percurso Vazios");
-        }//Teste  */
+  
        
-        //System.out.println("Solução Inicial Gerada Com Sucesso");
         System.out.println("Digite o número de iterações desejadas: ");
         int numIteracoes = scanner.nextInt();
         System.out.println("Digite a porcentagem da taxa de mutação");
         int  taxaMutacao = scanner.nextInt();
         
+        
+        pop = construirPopulacaoInicial(tam, matrizDeAdjacencia, quantVertices, G); //Construir População Inicial
+
+         
         //Genetic
         for(i=0;i<numIteracoes;i++){
             
-           System.out.println(i+"iteração");
+            System.out.println(i+"iteração");
             selecionados = selecaoDosIndividuos(pop , G); //Avalia e Seleciona os Individuos
             popGerada = crossover(pop, selecionados, G, matrizDeAdjacencia);
             probMutacao = Math.random();
@@ -293,13 +299,15 @@ public class Genetico_tsp {
                 novo = mutacao(popGerada.get(indMutada));
                 novo.validar(matrizDeAdjacencia, listaDeVertices);
                 if(novo.validacao){
-                    System.out.println("Ocorreu Mutação");
+                  System.out.println("Ocorreu Mutação");
                   popGerada.add(novo);
                   popGerada.remove(indMutada);
                 }//A nova solução só será realmente alterada se for válida           
             }
             
-          pop = popGerada; 
+            pop.clear();
+            for(Individuo ii: popGerada) pop.add(ii);
+           
         }
         
       Individuo sx = melhorEncontrado(pop,G); 
@@ -309,7 +317,7 @@ public class Genetico_tsp {
           System.out.print(sx.getPercurso().get(i).getId());
           
       }
-      for(Aresta a: G.arestas) System.out.println("Info da Aresta: " + a.getOrigem().getId() +  "  " + a.getDestino().getId()+ "  "  + a.getCusto());
+      //for(Aresta a: G.arestas) System.out.println("Info da Aresta: " + a.getOrigem().getId() +  "  " + a.getDestino().getId()+ "  "  + a.getCusto());
       sx.calculaCusto(G);
       System.out.println("Custo: "+ sx.getCusto());
       

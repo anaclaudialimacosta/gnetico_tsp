@@ -4,7 +4,8 @@
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
         <group>
             <file>file:/C:/Users/alima/Documents/NetBeansProjects/Genetico_TSP/src/genetico_tsp/Grafo.java</file>
-            <file>file:/C:/Users/alima/Documents/NetBeansProjects/Genetico_TSP/src/genetico_tsp/Solucao.java</file>
+            <file>file:/C:/Users/alima/Documents/NetBeansProjects/Genetico_TSP/src/genetico_tsp/Individuo.java</file>
+            <file>file:/C:/Users/alima/Documents/NetBeansProjects/Genetico_TSP/src/genetico_tsp/Aresta.java</file>
             <file>file:/C:/Users/alima/Documents/NetBeansProjects/Genetico_TSP/src/genetico_tsp/Genetico_tsp.java</file>
             <file>file:/C:/Users/alima/Documents/NetBeansProjects/Genetico_TSP/src/genetico_tsp/Vertice.java</file>
         </group>

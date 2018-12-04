@@ -40,7 +40,7 @@ public class Individuo {
                Vertice v2 = a.getDestino();
                if(((v1.getId()==u.getId())&&(v2.getId()==v.getId())) || ((v1.getId()==v.getId())&&(v2.getId()==u.getId())) ){
                    cust = cust + a.getCusto();
-                   System.out.println("entrei aaaaaaqui");//não está entrando aqui
+                   //System.out.println("entrei aaaaaaqui");//não está entrando aqui
                    break;
                }
            }
