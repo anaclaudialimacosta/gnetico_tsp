@@ -50,7 +50,7 @@ public class Genetico_tsp {
         
         while (percurso.size() < numVertices) {
             System.out.println("Entrei no While do Gerador Aleatório");
-            int indice = (int) (Math.random()* numVertices + 1);
+            int indice = (int) (Math.random()* numVertices)+ 1;
             //System.out.println("Indice Gerado: " +indice );
             if(jaAconteceu[indice]==0 && indice != 0){
                 jaAconteceu[indice]=1;
@@ -70,16 +70,16 @@ public class Genetico_tsp {
         
         int contSolucoesValidas = 0;
         while (contSolucoesValidas < tam) {
-                int ini = (int) Math.floor(Math.random() * numVertices+1); //Seleciona um Vertice Aleatório
+                int ini = (int) Math.random() * numVertices +1; //Seleciona um Vertice Aleatório
                 System.out.println("Entrei em Construir Pop Ini");
-                Vertice v = new Vertice(ini);
+                Vertice v = g.vertices.get(ini);
                 Individuo s1 = geradorSolucaoaleatoria(v, g, numVertices);
                 s1.validar(matrizDeAdjacencia, g.vertices);
                 if(s1.validacao){
                     popInicial.add(s1);
                     contSolucoesValidas++;
                     
-                   // System.out.println("SOLUÇÃO VÁLIDA ENCONTRADAAAAAAAAAAAAAAAA");
+                    System.out.println("SOLUÇÃO VÁLIDA ENCONTRADAAAAAAAAAAAAAAAA");
                 }
                 
                
@@ -149,13 +149,15 @@ public class Genetico_tsp {
     }
     
     public static ArrayList<Individuo> crossover(ArrayList<Individuo> pop, Individuo[] selecionados, Grafo g, Integer[][] matrizDeAdjacencia){
-        //System.out.println("Entrei no CrossOver");
+        System.out.println("Entrei no CrossOver");
         int quantVertices = g.vertices.size();
         Individuo pai1 = selecionados[0];
         Individuo pai2 = selecionados[1];
         Integer[] mascara = new Integer[quantVertices];
+        Integer[] percGerado = new Integer[quantVertices];
         ArrayList<Individuo> popGerada = new ArrayList<>();
         ArrayList<Vertice> percursoGerado = new ArrayList<>();
+        
         Individuo s1 = new Individuo();
         int contadorSolucoesValidas =1;
         
@@ -163,7 +165,7 @@ public class Genetico_tsp {
         for(int i=0;i<quantVertices;i++){
             double prob = Math.random();
             mascara[i] = (prob>=0.5)? 1 : 0;  //operador ternário mais adequado nessa situação
-            //System.out.println("Criei a máscara");
+            System.out.println("mascara["+i+ "]: "+ mascara[i]);
         } //Gerando a mascara
         
         popGerada.add(selecionados[0]);//Melhor solução permanece na solução gerada
@@ -171,15 +173,18 @@ public class Genetico_tsp {
             //System.out.println("SOS ENTREEEEEEEI");
             for(int i=0;i<quantVertices;i++){
                 if(mascara[i] ==1) {
-                    percursoGerado.add(pai1.getPercurso().get(i).getId(),pai1.getPercurso().get(i) );
+                    percGerado[i] = pai1.getPercurso().get(i).getId();
                 }else{
-                    percursoGerado.add(pai2.getPercurso().get(i).getId(),pai2.getPercurso().get(i) );
+                     percGerado[i] = pai2.getPercurso().get(i).getId();
                 }
             }
+            for(int i : percGerado) percursoGerado.add(new Vertice(i)); //transformando o vertor em um arraylist
+            
                 s1.setPercurso(percursoGerado);
+                s1.calculaCusto(g);
                 s1.validar(matrizDeAdjacencia, percursoGerado);
                 if(s1.validacao){
-                    //System.out.println("A solução gerada é vááááááálida");
+                    System.out.println("A solução gerada é vááááááálida");
                     popGerada.add(s1);
                     contadorSolucoesValidas++;
                 }

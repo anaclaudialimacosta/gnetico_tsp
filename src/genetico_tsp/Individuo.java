@@ -79,7 +79,11 @@ public class Individuo {
              
          }
          for(int i=0;i<this.getPercurso().size()-1;i++){
-             if(matrizDeAdjacencia[representacaoCaminho[i]][representacaoCaminho[i+1]] != 1){ //Algum vértice não é  adjacente ao seu próximo?
+             
+             int vi = representacaoCaminho[i];
+             int vj = representacaoCaminho[i+1];
+             
+             if(matrizDeAdjacencia[vi][vj] != 1){ //Algum vértice não é  adjacente ao seu próximo?
                  if(matrizDeAdjacencia[representacaoCaminho[this.getPercurso().size()-1]][0] != 1){//O último não é adjacente ao primeiro?
                      //System.out.println("Solução inválida, Keep Trying");
                      isValid = false;
