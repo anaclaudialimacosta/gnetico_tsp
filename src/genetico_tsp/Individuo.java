@@ -77,7 +77,7 @@ public class Individuo {
          for(int i=0;i<this.getPercurso().size();i++){
              representacaoCaminho[i] = this.percurso.get(i).getId();
              
-         }
+         }//copiar os ids dos vértices do percurso em ordem para um vetor de inteiros
          for(int i=0;i<this.getPercurso().size()-1;i++){
              
              int vi = representacaoCaminho[i];

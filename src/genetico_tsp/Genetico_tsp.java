@@ -141,7 +141,7 @@ public class Genetico_tsp {
     }
     
     public static ArrayList<Individuo> crossover(ArrayList<Individuo> pop, Individuo[] selecionados, Grafo g, Integer[][] matrizDeAdjacencia){
-        System.out.println("Entrei no CrossOver");
+        //System.out.println("Entrei no CrossOver");
         int quantVertices = g.vertices.size();
         Individuo pai1 = selecionados[0];
         Individuo pai2 = selecionados[1];
@@ -159,7 +159,7 @@ public class Genetico_tsp {
         for(int i=0;i<quantVertices;i++){
             double prob = Math.random();
             mascara[i] = (prob>=0.5)? 1 : 0;  //operador ternário mais adequado nessa situação
-            System.out.println("mascara[" +i+ "]: "+ mascara[i]);
+           // System.out.println("mascara[" +i+ "]: "+ mascara[i]);
         } //Gerando a mascara
         
         
@@ -185,7 +185,7 @@ public class Genetico_tsp {
             
             
         }
-        System.out.println("reotrnei no crossover");
+        //System.out.println("reotrnei no crossover");
         return popGerada;
         
     }//Cruzamento através de recombinação uniforme
@@ -316,7 +316,7 @@ public class Genetico_tsp {
           System.out.print(sx.getPercurso().get(i).getId());
           
       }
-      System.out.print(sx.getPercurso().get(0)); //Volta para o primeiro
+      System.out.print(sx.getPercurso().get(0).getId()); //Volta para o primeiro
       
       //for(Aresta a: G.arestas) System.out.println("Info da Aresta: " + a.getOrigem().getId() +  "  " + a.getDestino().getId()+ "  "  + a.getCusto());
       
