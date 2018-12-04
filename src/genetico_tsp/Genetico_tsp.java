@@ -140,31 +140,19 @@ public class Genetico_tsp {
         
     }
     
-    public static ArrayList<Individuo> crossover(ArrayList<Individuo> pop, Individuo[] selecionados, Grafo g, Integer[][] matrizDeAdjacencia){
-        //System.out.println("Entrei no CrossOver");
+    public static Individuo umCruzamento(Individuo pai1, Individuo pai2, Grafo g, Integer[][] matrizDeAdjacencia){
         int quantVertices = g.vertices.size();
-        Individuo pai1 = selecionados[0];
-        Individuo pai2 = selecionados[1];
         Integer[] mascara = new Integer[quantVertices];
+        Individuo s1 = new Individuo();
         Integer[] percGerado = new Integer[quantVertices];
-        ArrayList<Individuo> popGerada = new ArrayList<>();
         ArrayList<Vertice> percursoGerado = new ArrayList<>();
         
-        Individuo s1 = new Individuo();
-        
-        popGerada.add(selecionados[0]);//Melhor solução permanece na solução gerada
-        int contadorSolucoesValidas =1;
-        
-        
-        for(int i=0;i<quantVertices;i++){
-            double prob = Math.random();
-            mascara[i] = (prob>=0.5)? 1 : 0;  //operador ternário mais adequado nessa situação
-           // System.out.println("mascara[" +i+ "]: "+ mascara[i]);
-        } //Gerando a mascara
-        
-        
-        while(pop.size()> contadorSolucoesValidas){
-           
+            for(int i=0;i<quantVertices;i++){
+                double prob = Math.random();
+                mascara[i] = (prob>=0.5)? 1 : 0;  //operador ternário mais adequado nessa situação
+                // System.out.println("mascara[" +i+ "]: "+ mascara[i]);
+                } //Gerando a mascara
+
             for(int i=0;i<quantVertices;i++){
                 if(mascara[i] ==1) {
                     percGerado[i] = pai1.getPercurso().get(i).getId();
@@ -177,16 +165,33 @@ public class Genetico_tsp {
                 s1.setPercurso(percursoGerado);
                 s1.calculaCusto(g);
                 s1.validar(matrizDeAdjacencia, percursoGerado);
-                
-                if(s1.validacao==true){
-                    System.out.println("A solução gerada é vááááááálida");
-                    popGerada.add(s1);
-                    contadorSolucoesValidas++;
-                    continue;
-                }
+         
+            return s1;
+
+    }
+    
+    public static ArrayList crossover(ArrayList<Individuo> pop, Individuo[] selecionados, Grafo g, Integer[][] matrizDeAdjacencia){
+        //System.out.println("Entrei no CrossOver");
+        
+        Individuo pai1 = selecionados[0];
+        Individuo pai2 = selecionados[1];
+        ArrayList<Individuo> popGerada = new ArrayList<>();
+        int cont =1;
+        
+        Individuo s1 = new Individuo();
+        
+        popGerada.add(selecionados[0]);//Melhor solução permanece na solução gerada
+        popGerada.add(selecionados[1]);
+        while(cont<pop.size()){
             
+            s1 = umCruzamento(pai1,pai2,g,matrizDeAdjacencia);
+            if(s1.validacao) {
+                popGerada.add(s1);
+                cont++;
+            }
             
         }
+
         System.out.println("reotrnei no crossover");
         return popGerada;
         
