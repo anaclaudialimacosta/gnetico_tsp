@@ -48,7 +48,7 @@ public class Genetico_tsp {
         percurso.add(inicial);
         
         while (percurso.size() < numVertices) {
-            //System.out.println("Entrei no While do Gerador Aleatório");
+            System.out.println("Entrei no While do Gerador Aleatório");
             int indice = (int) (Math.random()* numVertices)+ 1;
             //System.out.println("Indice Gerado: " +indice );
             if(jaAconteceu[indice]==0 && indice != 0){
@@ -177,19 +177,21 @@ public class Genetico_tsp {
                 s1.setPercurso(percursoGerado);
                 s1.calculaCusto(g);
                 s1.validar(matrizDeAdjacencia, percursoGerado);
-                if(s1.validacao){
-                    //System.out.println("A solução gerada é vááááááálida");
+                
+                if(s1.validacao==true){
+                    System.out.println("A solução gerada é vááááááálida");
                     popGerada.add(s1);
                     contadorSolucoesValidas++;
+                    continue;
                 }
             
             
         }
-        //System.out.println("reotrnei no crossover");
+        System.out.println("reotrnei no crossover");
         return popGerada;
         
     }//Cruzamento através de recombinação uniforme
-    public static Individuo mutacao(Individuo ind){
+    public static Individuo mutacao(Individuo ind, Integer[][] matrizDeAdjacencia){
         Individuo novoi = new Individuo();
         Integer[] arrayAux= new Integer[ind.getPercurso().size()];
         ArrayList<Vertice> percurso = new ArrayList<>();
@@ -211,6 +213,8 @@ public class Genetico_tsp {
             } //criando percurso para novo individuo
             
            novoi.setPercurso(percurso);
+           novoi.validar(matrizDeAdjacencia, percurso);
+           
         }
         return novoi;
         
@@ -292,20 +296,23 @@ public class Genetico_tsp {
             popGerada = crossover(pop, selecionados, G, matrizDeAdjacencia);
             probMutacao = Math.random();
             
-            if(probMutacao<(taxaMutacao/100)){ //probabilidade de 20% de ter uma mutação
+            if(probMutacao<(taxaMutacao/100)){ 
                 Individuo novo = new Individuo();
                 int indMutada = (int) Math.random()* popGerada.size()+1;
-                novo = mutacao(popGerada.get(indMutada));
-                novo.validar(matrizDeAdjacencia, listaDeVertices);
+                novo = mutacao(popGerada.get(indMutada), matrizDeAdjacencia);
+                novo.validar(matrizDeAdjacencia, G.vertices);
                 if(novo.validacao){
-                  System.out.println("Ocorreu Mutação");
+                  System.out.println("Ocorreu Mutação!!!!!!!!!");
                   popGerada.add(novo);
                   popGerada.remove(indMutada);
                 }//A nova solução só será realmente alterada se for válida           
             }
             
             pop.clear();
-            for(Individuo ii: popGerada) pop.add(ii);
+            for(Individuo ii: popGerada) {
+                ii.validar(matrizDeAdjacencia, G.vertices);
+                pop.add(ii);
+            }
            
         }
         
