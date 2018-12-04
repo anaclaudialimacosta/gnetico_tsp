@@ -48,7 +48,6 @@ public class Genetico_tsp {
         percurso.add(inicial);
         
         while (percurso.size() < numVertices) {
-            System.out.println("Entrei no While do Gerador Aleatório");
             int indice = (int) (Math.random()* numVertices)+ 1;
             //System.out.println("Indice Gerado: " +indice );
             if(jaAconteceu[indice]==0 && indice != 0){
@@ -192,7 +191,7 @@ public class Genetico_tsp {
             
         }
 
-        System.out.println("reotrnei no crossover");
+        //System.out.println("reotrnei no crossover");
         return popGerada;
         
     }//Cruzamento através de recombinação uniforme
@@ -296,18 +295,17 @@ public class Genetico_tsp {
         //Genetic
         for(i=0;i<numIteracoes;i++){
             
-            System.out.println(i+"iteração");
+            //System.out.println(i+"iteração");
             selecionados = selecaoDosIndividuos(pop , G); //Avalia e Seleciona os Individuos
             popGerada = crossover(pop, selecionados, G, matrizDeAdjacencia);
             probMutacao = Math.random();
-            
+            //System.out.println("Probabilidade"+ probMutacao);
             if(probMutacao<(taxaMutacao/100)){ 
                 Individuo novo = new Individuo();
                 int indMutada = (int) Math.random()* popGerada.size()+1;
                 novo = mutacao(popGerada.get(indMutada), matrizDeAdjacencia);
                 novo.validar(matrizDeAdjacencia, G.vertices);
                 if(novo.validacao){
-                  System.out.println("Ocorreu Mutação!!!!!!!!!");
                   popGerada.add(novo);
                   popGerada.remove(indMutada);
                 }//A nova solução só será realmente alterada se for válida           
@@ -325,7 +323,7 @@ public class Genetico_tsp {
       
       System.out.println("-------------MELHOR SOLUÇÃO-----------------------\n");
       for(i=0;i<sx.getPercurso().size();i++){
-          System.out.print(sx.getPercurso().get(i).getId());
+          System.out.print(sx.getPercurso().get(i).getId()+ "    ");
           
       }
       System.out.print(sx.getPercurso().get(0).getId()); //Volta para o primeiro
@@ -334,7 +332,7 @@ public class Genetico_tsp {
       
       sx.calculaCusto(G);
       
-      System.out.println("Custo: "+ sx.getCusto());
+      System.out.println("\nCusto: "+ sx.getCusto());
       
         
        
