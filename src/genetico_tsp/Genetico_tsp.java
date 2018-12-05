@@ -87,7 +87,7 @@ public class Genetico_tsp {
 
     public static String[][] lerGrafo() throws FileNotFoundException, IOException {
         String[][] buffer = new String[100][3];
-        try (BufferedReader in = new BufferedReader(new FileReader("/C:\\Users\\alima\\Documents/entrada3.txt"))) {
+        try (BufferedReader in = new BufferedReader(new FileReader("/C:\\Users\\alima\\Documents/entrada1.txt"))) {
             String str;
             int i = 0;
             while ((str = in.readLine()) != null) {
@@ -195,14 +195,16 @@ public class Genetico_tsp {
         return popGerada;
         
     }//Cruzamento através de recombinação uniforme
+    
+    
+    
     public static Individuo mutacao(Individuo ind, Integer[][] matrizDeAdjacencia){
         Individuo novoi = new Individuo();
         Integer[] arrayAux= new Integer[ind.getPercurso().size()];
         ArrayList<Vertice> percurso = new ArrayList<>();
         for(int i=0;i<ind.getPercurso().size();i++){
                 arrayAux[i]=ind.getPercurso().get(i).getId();
-            } // auxilia na troca, o arraylist não é fácil de fazer a troca de posições
-        
+            }
         while(! novoi.validacao){
             int pos1,pos2;
             pos1 = (int) Math.random() * (ind.getPercurso().size() + 1);
@@ -214,7 +216,7 @@ public class Genetico_tsp {
             
             for(int i=0;i<ind.getPercurso().size();i++){
                 percurso.add(new Vertice(arrayAux[i]));
-            } //criando percurso para novo individuo
+            } 
             
            novoi.setPercurso(percurso);
            novoi.validar(matrizDeAdjacencia, percurso);
@@ -222,7 +224,7 @@ public class Genetico_tsp {
         }
         return novoi;
         
-    }//Essa função retorna um individuo que sofreu mutação, mas não valida se o novo individuo ainda possui um percurso válido, isso deve ser feito no main
+    }
 
     public static void main(String[] args) throws FileNotFoundException, IOException {
 
@@ -295,7 +297,8 @@ public class Genetico_tsp {
         //Genetic
         for(i=0;i<numIteracoes;i++){
             
-            //System.out.println(i+"iteração");
+            
+            //10System.out.println(i+"iteração");
             selecionados = selecaoDosIndividuos(pop , G); //Avalia e Seleciona os Individuos
             popGerada = crossover(pop, selecionados, G, matrizDeAdjacencia);
             probMutacao = Math.random();
@@ -313,6 +316,7 @@ public class Genetico_tsp {
             
             pop.clear();
             for(Individuo ii: popGerada) {
+                
                 ii.validar(matrizDeAdjacencia, G.vertices);
                 pop.add(ii);
             }

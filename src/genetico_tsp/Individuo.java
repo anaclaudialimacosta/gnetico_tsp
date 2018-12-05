@@ -18,13 +18,12 @@ public class Individuo {
     private int custo;
     private ArrayList<Vertice> percurso;
     public boolean validacao;
-    public float feat; //Era pra ser fitness, mas eu escrevi assim incialmente e agora to com preguiça de trocar
+
     
     public Individuo() {
         this.percurso= new ArrayList<>();
         this.validacao = false;
-        this.feat = 0; //Esse ponto do código o limita a uma entrada com no máximo 200 vértices
-        
+         
     }
 
     public int getCusto() {
@@ -45,9 +44,18 @@ public class Individuo {
                    break;
                }
            }
+           
        }
+       Vertice primeiro = this.percurso.get(0);
+       Vertice ultimo = this.percurso.get(this.percurso.size()-1);
        
-       //AQUI AINDA FALTA SOMAR O CUSTO DA ÚLTIMA ARESTA PARA VOLTAR PARA A PRIMEIRA
+       for(Aresta a: g.arestas){
+           if((((primeiro.getId()==a.getOrigem().getId())&&(ultimo.getId()==a.getDestino().getId())) || ((ultimo.getId()==a.getOrigem().getId())&&(primeiro.getId()==a.getDestino().getId())) )){
+               cust+=a.getCusto();
+           }
+               
+       }//Adicionar custo da última para a primeira aresta do percurso
+
        
        this.custo = cust;
        return cust;
